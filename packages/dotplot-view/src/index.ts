@@ -21,6 +21,10 @@ import {
   configSchema as PAFAdapterConfigSchema,
   AdapterClass as PAFAdapter,
 } from './PAFAdapter'
+import {
+  configSchema as SAMAdapterConfigSchema,
+  AdapterClass as SAMAdapter,
+} from './SAMAdapter'
 import ComparativeRender from './DotplotRenderer/ComparativeRenderRpc'
 
 export default class DotplotPlugin extends Plugin {
@@ -55,6 +59,15 @@ export default class DotplotPlugin extends Plugin {
           name: 'PAFAdapter',
           configSchema: PAFAdapterConfigSchema,
           AdapterClass: PAFAdapter,
+        }),
+    )
+
+    pluginManager.addAdapterType(
+      () =>
+        new AdapterType({
+          name: 'SAMAdapter',
+          configSchema: SAMAdapterConfigSchema,
+          AdapterClass: SAMAdapter,
         }),
     )
 

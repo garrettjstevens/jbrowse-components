@@ -143,6 +143,104 @@ const stateModelFactory = (
         self.sortedByPosition = centerBp
         self.sortedByRefName = centerRefName
       },
+      onDotplotView(feature: Feature) {
+        const session = getSession(self)
+        // add the specific evidence tracks to the LGVs in the split view
+        const readAssembly = `${feature.get('name')}_assembly`
+        const refAssembly = getConf(self, 'assemblyNames')[0]
+        console.log(feature.toJSON())
+        // @ts-ignore
+        session.addAssemblyConf({
+          name: readAssembly,
+          sequence: {
+            type: 'ReferenceSequenceTrack',
+            trackId: `${feature.get('name')}_track`,
+            adapter: {
+              type: 'FromConfigSequenceAdapter',
+              features: [feature.toJSON()],
+            },
+          },
+        })
+        // @ts-ignore
+        const ret = session.addTrackConf({
+          type: 'DotplotTrack',
+          trackId: 'mydotplottrack',
+          name: 'testing',
+          assemblyNames: [readAssembly],
+          adapter: {
+            type: 'SAMAdapter',
+            data: feature.toJSON(),
+          },
+        })
+        console.log({ ret })
+        session.addView('DotplotView', {
+          type: 'DotplotView',
+          assemblyNames: [readAssembly, refAssembly],
+          hview: {
+            displayedRegions: [
+              {
+                refName: feature.get('name'),
+                start: 0,
+                end: feature.get('seq').length,
+                assemblyName: readAssembly,
+              },
+            ],
+            bpPerPx: 1,
+            offsetPx: 0,
+          },
+          vview: {
+            displayedRegions: [
+              {
+                refName: feature.get('name'),
+                start: feature.get('start'),
+                end: feature.get('end'),
+                assemblyName: refAssembly,
+              },
+            ],
+            bpPerPx: 1,
+            offsetPx: 0,
+          },
+          tracks: [
+            {
+              type: 'DotplotTrack',
+              configuration: 'mydotplottrack',
+            },
+          ],
+        })
+
+        // session.addView('LinearSyntenyView', viewSnapshot)
+      },
+
+      onLinearCompareView(feat: Feature) {
+        const session = getSession(self)
+        // add the specific evidence tracks to the LGVs in the split view
+        const viewSnapshot = {
+          type: 'DotplotView',
+          views: [
+            {
+              type: '',
+              ...getSnapshot(d1),
+              tracks: [],
+              hideHeader: true,
+            },
+            {
+              type: 'LinearGenomeView',
+              ...getSnapshot(d2),
+              tracks: [],
+              hideHeader: true,
+            },
+          ],
+          tracks: [
+            {
+              configuration: 'grape_peach_synteny_mcscan',
+              type: 'LinearSyntenyTrack',
+            },
+          ],
+          displayName: 'A vs B',
+        }
+
+        session.addView('LinearSyntenyView', viewSnapshot)
+      },
     }))
     .actions(self => {
       // reset the sort object and refresh whole track on reload
@@ -185,6 +283,18 @@ const stateModelFactory = (
                   if (feat) {
                     self.copyFeatureToClipboard(feat)
                   }
+                },
+              },
+              {
+                label: 'Open linear comparison',
+                onClick: () => {
+                  self.onLinearCompareView(feat)
+                },
+              },
+              {
+                label: 'Open dotplot comparison',
+                onClick: () => {
+                  self.onDotplotView(feat)
                 },
               },
             ]

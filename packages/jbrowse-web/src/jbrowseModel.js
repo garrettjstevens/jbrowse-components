@@ -99,6 +99,7 @@ export default function JBrowseWeb(
       addTrackConf(trackConf) {
         const { type } = trackConf
         if (!type) throw new Error(`unknown track type ${type}`)
+        console.log({ trackConf })
         const length = self.tracks.push(trackConf)
         return self.tracks[length - 1]
       },
