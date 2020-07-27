@@ -148,7 +148,6 @@ const stateModelFactory = (
         // add the specific evidence tracks to the LGVs in the split view
         const readAssembly = `${feature.get('name')}_assembly`
         const refAssembly = getConf(self, 'assemblyNames')[0]
-        console.log(feature.toJSON())
         // @ts-ignore
         session.addAssemblyConf({
           name: readAssembly,
@@ -162,7 +161,7 @@ const stateModelFactory = (
           },
         })
         // @ts-ignore
-        const ret = session.addTrackConf({
+        session.addTrackConf({
           type: 'DotplotTrack',
           trackId: 'mydotplottrack',
           name: 'testing',
@@ -171,8 +170,10 @@ const stateModelFactory = (
             type: 'SAMAdapter',
             data: feature.toJSON(),
           },
+          renderer: {
+            type: 'DotplotRenderer',
+          },
         })
-        console.log({ ret })
         session.addView('DotplotView', {
           type: 'DotplotView',
           assemblyNames: [readAssembly, refAssembly],
@@ -191,7 +192,7 @@ const stateModelFactory = (
           vview: {
             displayedRegions: [
               {
-                refName: feature.get('name'),
+                refName: feature.get('seq_id'),
                 start: feature.get('start'),
                 end: feature.get('end'),
                 assemblyName: refAssembly,

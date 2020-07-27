@@ -126,11 +126,8 @@ export default class DotplotRenderer extends ComparativeServerSideRendererType {
       return view
     })
 
-    console.log('wtf', views)
-
     await Promise.all(
       realizedViews.map(async view => {
-        console.log('t1', view.dynamicBlocks.contentBlocks)
         view.setFeatures(
           await this.getFeatures({
             ...renderProps,
