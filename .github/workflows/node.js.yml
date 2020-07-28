@@ -19,3 +19,17 @@ jobs:
       uses: bahmutov/npm-install@v1
     - name: Lint codebase
       run: yarn lint
+
+  test:
+    name: Test on node 10.x and ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 10.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+    - name: Install deps and build (with cache)
+      uses: bahmutov/npm-install@v1
+    - name: test codebase
+      run: yarn test
