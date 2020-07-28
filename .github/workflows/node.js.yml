@@ -18,7 +18,7 @@ jobs:
     - name: Install deps and build (with cache)
       uses: bahmutov/npm-install@v1
     - name: Lint codebase
-      run: yarn lint
+      run: yarn eslint --config .eslintrc.base.json --no-eslintrc --report-unused-disable-directives --max-warnings 0 --ext .js,.ts,.jsx,.tsx .
 
   test:
     name: Test on node 10.x and ubuntu-latest
@@ -32,4 +32,33 @@ jobs:
     - name: Install deps and build (with cache)
       uses: bahmutov/npm-install@v1
     - name: test codebase
-      run: yarn test
+      run: yarn jest --ci --coverage
+
+  format:
+    name: Format on node 10.x and ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 10.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+    - name: Install deps and build (with cache)
+      uses: bahmutov/npm-install@v1
+    - name: check codebase format
+      run: yarn prettier --check .
+
+  build:
+    name: Build on node 10.x and ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 10.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+    - name: Install deps and build (with cache)
+      uses: bahmutov/npm-install@v1
+    - name: Build codebase
+      run: yarn build
+      run: yarn jest --ci packages/integration-tests
