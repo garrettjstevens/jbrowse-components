@@ -61,4 +61,6 @@ jobs:
       uses: bahmutov/npm-install@v1
     - name: Build codebase
       run: yarn build
+    - name: Build web
+      run: yarn build:web
     - run: yarn jest --ci packages/integration-tests

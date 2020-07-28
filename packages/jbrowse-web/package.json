@@ -66,7 +66,7 @@
   "license": "MIT",
   "scripts": {
     "start": "rescripts --max-http-header-size=100000 start",
-    "build": "rescripts build",
+    "build:web": "rescripts build",
     "test": "rescripts test",
     "eject": "rescripts eject",
     "checktypes": "tsc --noEmit",
